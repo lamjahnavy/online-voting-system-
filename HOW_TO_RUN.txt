@@ -1,0 +1,45 @@
+======================================================
+  VOTING APP — HOW TO RUN
+======================================================
+
+The camera REQUIRES a local server (browsers block camera
+on file:// for security). This is a browser rule — not
+something we can change.
+
+------------------------------------------------------
+WINDOWS USERS (Easiest):
+------------------------------------------------------
+1. Double-click  START_SERVER.bat
+2. Browser opens automatically at localhost:8000
+3. Done!
+
+If it says "Python not found", install Python free from:
+  https://www.python.org/downloads/
+  (tick "Add Python to PATH" during install)
+Then double-click START_SERVER.bat again.
+
+------------------------------------------------------
+MAC / LINUX USERS:
+------------------------------------------------------
+1. Open Terminal in this folder
+2. Run:  bash START_SERVER.sh
+3. Browser opens automatically
+
+------------------------------------------------------
+MANUAL (if scripts don't work):
+------------------------------------------------------
+Open a terminal/command prompt in this folder and run:
+
+  python -m http.server 8000
+
+Then open your browser and go to:
+  http://localhost:8000/voter.html
+  http://localhost:8000/admin.html
+
+------------------------------------------------------
+PAGES:
+------------------------------------------------------
+  voter.html  →  Voter registration & voting
+  admin.html  →  Admin panel (start election, add candidates)
+
+======================================================

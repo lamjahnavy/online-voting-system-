@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Online Voting System — ADSA Project</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@500&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'DM Sans',sans-serif;min-height:100vh;background:#0f172a;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem}
+    body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 25% 60%,rgba(37,99,235,.18) 0%,transparent 55%),radial-gradient(ellipse at 80% 20%,rgba(124,58,237,.12) 0%,transparent 50%);pointer-events:none}
+    .wrap{width:100%;max-width:860px;position:relative;z-index:1;text-align:center}
+    .badge{display:inline-block;background:rgba(37,99,235,.2);border:1px solid rgba(37,99,235,.4);color:#93c5fd;font-size:12px;font-weight:500;padding:5px 16px;border-radius:999px;margin-bottom:2.5rem}
+    .hi{font-size:64px;display:block;margin-bottom:1rem}
+    h1{font-size:2.7rem;font-weight:700;color:#f1f5f9;margin-bottom:.75rem}
+    h1 em{color:#60a5fa;font-style:normal}
+    .sub{font-size:16px;color:#94a3b8;max-width:500px;margin:0 auto 3.5rem;line-height:1.7}
+    .cards{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:2.5rem}
+    .card{background:#1e293b;border:2px solid #1e293b;border-radius:22px;padding:2.25rem 2rem;text-align:center;text-decoration:none;display:flex;flex-direction:column;align-items:center;transition:transform .2s,border-color .2s,box-shadow .2s}
+    .card:hover{transform:translateY(-5px)}
+    .card.admin:hover{border-color:#3b82f6;box-shadow:0 24px 60px rgba(37,99,235,.28)}
+    .card.voter:hover{border-color:#22c55e;box-shadow:0 24px 60px rgba(34,197,94,.22)}
+    .ci{width:78px;height:78px;border-radius:22px;display:flex;align-items:center;justify-content:center;font-size:36px;margin-bottom:1.5rem}
+    .admin .ci{background:rgba(37,99,235,.15);border:1px solid rgba(37,99,235,.3)}
+    .voter .ci{background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.25)}
+    .role{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;margin-bottom:8px}
+    .admin .role{color:#60a5fa}.voter .role{color:#4ade80}
+    .ctitle{font-size:1.35rem;font-weight:700;color:#f1f5f9;margin-bottom:10px}
+    .cdesc{font-size:13px;color:#64748b;line-height:1.6;margin-bottom:1.75rem;max-width:220px}
+    .cbtn{display:inline-block;padding:12px 26px;border-radius:11px;font-size:14px;font-weight:600;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;text-decoration:none}
+    .admin .cbtn{background:#2563eb;color:#fff}
+    .voter .cbtn{background:#16a34a;color:#fff}
+    .feats{margin-top:1.25rem;width:100%;border-top:1px solid rgba(255,255,255,.05);padding-top:1.25rem;text-align:left;display:flex;flex-direction:column;gap:7px}
+    .feat{font-size:12px;display:flex;align-items:center;gap:7px}
+    .feat::before{content:'✓';font-size:11px;font-weight:700}
+    .admin .feat{color:#334d6e}.admin .feat::before{color:#3b82f6}
+    .voter .feat{color:#1a4033}.voter .feat::before{color:#16a34a}
+    .strip{background:#1e293b;border:1px solid #334155;border-radius:14px;padding:1.1rem 1.5rem;display:flex;align-items:center;justify-content:center;gap:1.75rem;flex-wrap:wrap}
+    .si{font-size:12px;color:#94a3b8;display:flex;align-items:center;gap:6px}
+    .si strong{color:#cbd5e1}
+    .sep{width:1px;height:20px;background:#334155}
+    .foot{margin-top:1.75rem;font-size:12px;color:#334155}
+    @media(max-width:580px){.cards{grid-template-columns:1fr}h1{font-size:2rem}.sep{display:none}}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div class="badge">🎓 ADSA Project — Data Structures &amp; Algorithms</div>
+  <span class="hi">🗳️</span>
+  <h1>Online <em>Voting</em> System</h1>
+  <p class="sub">Face-verified voting with dual face scan, email OTP, AWS Rekognition duplicate detection.</p>
+  <div class="cards">
+    <a class="card admin" href="admin.html">
+      <div class="ci">⚙️</div>
+      <div class="role">Administration</div>
+      <div class="ctitle">Admin Panel</div>
+      <div class="cdesc">Manage candidates, control election, view live results and DS visualizer.</div>
+      <div class="cbtn">Enter Admin Panel →</div>
+      <div class="feats">
+        <div class="feat">Username &amp; password login</div>
+        <div class="feat">Add / remove candidates</div>
+        <div class="feat">Start &amp; stop election</div>
+        <div class="feat">Live vote tally &amp; results</div>
+        <div class="feat">Hash Table + Queue visualizer</div>
+      </div>
+    </a>
+    <a class="card voter" href="voter.html">
+      <div class="ci">🧑‍💼</div>
+      <div class="role">Voter Portal</div>
+      <div class="ctitle">Cast Your Vote</div>
+      <div class="cdesc">Email OTP → Face Scan 1 → Face Scan 2 (confirm) → Queue → Vote.</div>
+      <div class="cbtn">Enter Voter Portal →</div>
+      <div class="feats">
+        <div class="feat">Email OTP identity verify</div>
+        <div class="feat">Face Scan 1 — enrollment</div>
+        <div class="feat">Face Scan 2 — confirmation match</div>
+        <div class="feat">Same face + diff name = blocked</div>
+        <div class="feat">One face = one vote forever</div>
+      </div>
+    </a>
+  </div>
+  <div class="strip">
+    <div class="si">🔐 <strong>Hash Table</strong> O(1) lookup</div>
+    <div class="sep"></div>
+    <div class="si">📋 <strong>Queue FIFO</strong> Voting line</div>
+    <div class="sep"></div>
+    <div class="si">🤖 <strong>AWS Dual Face Scan</strong> Registration</div>
+    <div class="sep"></div>
+    <div class="si">📧 <strong>Email OTP</strong> Identity verify</div>
+  </div>
+  <div class="foot">Online Voting System — ADSA Project · Supports 30 members</div>
+</div>
+</body>
+</html>

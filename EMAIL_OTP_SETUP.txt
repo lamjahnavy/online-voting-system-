@@ -1,0 +1,67 @@
+================================================================
+  EMAIL OTP SETUP — Online Voting System
+  OTP is now sent to voter's REAL email (not shown on screen)
+================================================================
+
+STEP 1 — INSTALL PHPMailer
+==========================
+Open Command Prompt inside your voting folder and run:
+
+  cd C:\xampp\htdocs\voting
+  composer require phpmailer/phpmailer
+
+If composer is not installed:
+  Download from: https://getcomposer.org/Composer-Setup.exe
+  Install it, then run the command above.
+
+After running, a "vendor" folder will appear in your voting folder.
+
+
+STEP 2 — SET UP GMAIL APP PASSWORD
+====================================
+You CANNOT use your normal Gmail password.
+You must create a special "App Password":
+
+1. Go to: https://myaccount.google.com/security
+2. Make sure 2-Step Verification is ON
+3. Go to: https://myaccount.google.com/apppasswords
+4. Select app: "Mail"
+5. Select device: "Windows Computer"
+6. Click Generate
+7. Copy the 16-character password shown (e.g. abcd efgh ijkl mnop)
+
+
+STEP 3 — EDIT api/send_otp.php
+================================
+Open api/send_otp.php and change these two lines:
+
+  define('SMTP_FROM_EMAIL', 'your_gmail@gmail.com');  ← your Gmail
+  define('SMTP_PASSWORD',   'xxxx xxxx xxxx xxxx');   ← App Password from Step 2
+
+Example:
+  define('SMTP_FROM_EMAIL', 'jahnavy2025@gmail.com');
+  define('SMTP_PASSWORD',   'abcd efgh ijkl mnop');
+
+
+STEP 4 — DONE!
+===============
+Now when a voter enters their email and clicks "Send OTP":
+✅ OTP is generated on the server (PHP)
+✅ OTP is emailed to the voter's real email address
+✅ OTP is NOT shown anywhere on screen
+✅ Voter must check their email inbox to get the code
+✅ OTP expires in 5 minutes
+
+================================================================
+  HOW TO TEST
+================================================================
+1. Start XAMPP (Apache + MySQL)
+2. Open: http://localhost/voting/voter.html
+3. Click "New Voter — Register"
+4. Enter your name, age, and YOUR OWN email address
+5. Click "Send OTP"
+6. Check your email inbox — you should receive the OTP email
+7. Enter the OTP from your email into the box
+8. Click Verify OTP
+
+================================================================

@@ -1,0 +1,91 @@
+================================================================
+  EMAILJS SETUP — No App Password, No Composer needed!
+  Free email sending directly from browser
+================================================================
+
+STEP 1 — CREATE FREE EMAILJS ACCOUNT
+======================================
+1. Go to: https://www.emailjs.com
+2. Click "Sign Up Free"
+3. Register with your Gmail (lamjahnavy11@gmail.com)
+4. Verify your email
+
+
+STEP 2 — ADD EMAIL SERVICE
+============================
+1. Login to EmailJS dashboard
+2. Click "Email Services" on left menu
+3. Click "Add New Service"
+4. Select "Gmail"
+5. Click "Connect Account" → login with your Gmail
+6. Click "Create Service"
+7. You will see a SERVICE ID like: service_abc1234
+8. COPY that Service ID — you need it later
+
+
+STEP 3 — CREATE EMAIL TEMPLATE
+================================
+1. Click "Email Templates" on left menu
+2. Click "Create New Template"
+3. Set these fields:
+   - Subject: Your Voting System OTP Code
+   - Body: paste this exactly:
+
+   Hello,
+
+   Your OTP for the Online Voting System is:
+
+   {{otp_code}}
+
+   This OTP expires in {{expires_in}}.
+   Do not share this with anyone.
+
+   Regards,
+   Voting System
+
+4. In "To Email" field — type: {{to_email}}
+5. Click "Save"
+6. You will see a TEMPLATE ID like: template_xyz5678
+7. COPY that Template ID
+
+
+STEP 4 — GET YOUR PUBLIC KEY
+==============================
+1. Click your account name (top right) → "Account"
+2. You will see "Public Key" like: abc123XYZdef456
+3. COPY that Public Key
+
+
+STEP 5 — EDIT voter.html
+==========================
+Open voter.html in Notepad
+Find these 3 lines near the top and fill in your values:
+
+    var EMAILJS_PUBLIC_KEY  = 'YOUR_PUBLIC_KEY';
+    var EMAILJS_SERVICE_ID  = 'YOUR_SERVICE_ID';
+    var EMAILJS_TEMPLATE_ID = 'YOUR_TEMPLATE_ID';
+
+Example:
+    var EMAILJS_PUBLIC_KEY  = 'abc123XYZdef456';
+    var EMAILJS_SERVICE_ID  = 'service_abc1234';
+    var EMAILJS_TEMPLATE_ID = 'template_xyz5678';
+
+Save the file (Ctrl+S)
+
+
+STEP 6 — TEST
+==============
+1. Open: http://localhost/voting/voter.html
+2. Click "New Voter — Register"
+3. Enter name, age, and any email address
+4. Click "Send OTP"
+5. Check that email inbox — OTP email will arrive!
+
+================================================================
+  FREE PLAN LIMITS
+================================================================
+EmailJS free plan allows:
+- 200 emails per month
+- Perfect for college project demo!
+
+================================================================

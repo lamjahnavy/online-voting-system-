@@ -1,0 +1,1286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Voter Portal — Voting System</title>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+  <script>
+    // ── EmailJS Config — fill YOUR values from emailjs.com ──────────
+    // 1. Sign up free at https://www.emailjs.com
+    // 2. Add Gmail service → copy Service ID
+    // 3. Create template → copy Template ID  
+    // 4. Go to Account → copy Public Key
+    var EMAILJS_PUBLIC_KEY  = 'T7U4ugIqFt23HSr8G';
+    var EMAILJS_SERVICE_ID  = 'service_2on3bm5';
+    var EMAILJS_TEMPLATE_ID = 'template_a1zestc';
+    // ────────────────────────────────────────────────────────────────
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@500&display=swap" rel="stylesheet"/>
+  <style>
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;font-size:15px;color:#1e293b;background:#f8fafc;min-height:100vh}
+.hdr{background:#0f172a;height:58px;display:flex;align-items:center;padding:0 2rem}
+.hdr-in{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:720px;margin:0 auto}
+.hdr-logo{font-size:17px;font-weight:600;color:#fff;display:flex;align-items:center;gap:8px}
+.hdr-back{font-size:13px;color:#64748b;text-decoration:none;border:1px solid #1e293b;padding:6px 14px;border-radius:7px;transition:all .15s}
+.hdr-back:hover{border-color:#334155;color:#94a3b8}
+.portal{max-width:640px;margin:0 auto;padding:2rem 1.25rem 4rem}
+.step{display:none}.step.active{display:block}
+.step-flow{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:1.25rem;padding:10px 14px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;font-size:12px}
+.sf{color:#94a3b8;font-weight:500;padding:3px 8px;border-radius:6px}
+.sf-active{color:#2563eb;background:#eff6ff;font-weight:600}
+.sf-done{color:#16a34a;background:#f0fdf4}
+.sf-arrow{color:#cbd5e1;flex-shrink:0}
+.hero-card{background:#fff;border:1px solid #e2e8f0;border-radius:22px;padding:2.5rem 2rem;text-align:center;box-shadow:0 4px 24px rgba(0,0,0,.06)}
+.hi{font-size:56px;margin-bottom:1rem}
+.hero-card h1{font-size:1.75rem;font-weight:700;color:#0f172a;margin-bottom:.65rem}
+.hero-card p{font-size:14px;color:#64748b;line-height:1.7;max-width:400px;margin:0 auto 2rem}
+.hero-btns{display:flex;flex-direction:column;gap:12px;max-width:460px;margin:0 auto}
+.big-btn{display:flex;align-items:center;gap:14px;padding:16px 20px;border-radius:14px;border:2px solid #e2e8f0;background:#fff;cursor:pointer;font-family:'DM Sans',sans-serif;text-align:left;transition:all .15s;width:100%}
+.big-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.08)}
+.big-btn.green:hover{border-color:#16a34a;box-shadow:0 8px 24px rgba(22,163,74,.15)}
+.big-btn.blue:hover{border-color:#2563eb;box-shadow:0 8px 24px rgba(37,99,235,.15)}
+.bbi{font-size:28px;flex-shrink:0}
+.bbt{font-size:15px;font-weight:600;color:#0f172a}
+.bbs{font-size:12px;color:#94a3b8;margin-top:2px}
+.fcard{background:#fff;border:1px solid #e2e8f0;border-radius:22px;padding:2rem;box-shadow:0 4px 24px rgba(0,0,0,.06)}
+.fcard h2{font-size:1.3rem;font-weight:700;color:#0f172a;margin-bottom:4px}
+.fcard.center{text-align:center}
+.fsub{font-size:14px;color:#64748b;margin-bottom:1.25rem;line-height:1.65}
+label{display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:5px;margin-top:14px}
+input[type=text],input[type=number],input[type=tel]{width:100%;height:46px;padding:0 14px;border:1px solid #cbd5e1;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:15px;color:#1e293b;outline:none;transition:border-color .15s,box-shadow .15s;background:#fff}
+input:focus{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.1)}
+input::placeholder{color:#94a3b8}
+.email-row{display:flex;gap:8px;align-items:center;margin-top:5px}
+
+.btn-otp{height:46px;padding:0 16px;background:#2563eb;color:#fff;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .15s;flex-shrink:0}
+.btn-otp:hover:not(:disabled){background:#1d4ed8}
+.btn-otp:disabled{background:#93c5fd;cursor:not-allowed}
+.otp-timer{font-size:11px;color:#94a3b8;font-weight:400}
+.btn-p{display:block;width:100%;height:48px;margin-top:16px;background:#2563eb;color:#fff;border:none;border-radius:11px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:all .15s}
+.btn-p:hover:not(:disabled){background:#1d4ed8;transform:translateY(-1px);box-shadow:0 6px 18px rgba(37,99,235,.3)}
+.btn-p:disabled{background:#93c5fd;cursor:not-allowed;transform:none}
+.btn-outline{display:block;width:100%;height:48px;background:#fff;color:#374151;border:1px solid #d1d5db;border-radius:11px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;cursor:pointer;transition:all .15s}
+.btn-outline:hover{background:#f9fafb}
+.lbtn{display:block;margin-top:14px;background:none;border:none;font-family:'DM Sans',sans-serif;font-size:13px;color:#94a3b8;cursor:pointer;text-align:center;width:100%}
+.lbtn:hover{color:#374151}
+.msg{font-size:13px;border-radius:9px;min-height:0;padding:0}.msg:not(:empty){padding:10px 14px;margin-top:12px;line-height:1.6}
+.msg-ok{background:#f0fdf4;color:#15803d;border:1px solid #bbf7d0}
+.msg-err{background:#fef2f2;color:#dc2626;border:1px solid #fecaca}
+.msg-info{background:#eff6ff;color:#2563eb;border:1px solid #bfdbfe}
+.cam-box{position:relative;width:100%;max-width:440px;margin:1rem auto;background:#0f172a;border-radius:16px;overflow:hidden}
+.cam-vid{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:16px;display:block}
+.cam-oval{position:absolute;top:50%;left:50%;transform:translate(-50%,-55%);width:170px;height:210px;border:3px solid rgba(96,165,250,.85);border-radius:50%;box-shadow:0 0 0 9999px rgba(0,0,0,.38);pointer-events:none;z-index:2}
+.cam-lbl{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.65);color:#fff;font-size:13px;font-weight:500;padding:5px 16px;border-radius:999px;white-space:nowrap;z-index:3;max-width:90%;text-align:center}
+.compare-box{display:flex;align-items:center;gap:12px;margin:1rem auto;max-width:460px}
+.compare-side{flex:1;text-align:center;position:relative}
+.compare-img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:12px;border:3px solid #16a34a;display:block;background:#0f172a}
+.compare-live{width:100%;aspect-ratio:1;object-fit:cover;border-radius:12px;border:3px solid #3b82f6;display:block;background:#0f172a}
+.cam-oval-sm{position:absolute;top:50%;left:50%;transform:translate(-50%,-55%);width:80px;height:100px;border:2px solid rgba(96,165,250,.8);border-radius:50%;pointer-events:none}
+.compare-lbl{font-size:12px;color:#64748b;margin-top:6px;font-weight:500}
+.compare-vs{font-size:18px;font-weight:700;color:#94a3b8;flex-shrink:0}
+.cam-lbl-inline{font-size:13px;color:#64748b;text-align:center;margin:8px 0 4px;font-weight:500;min-height:20px}
+.scan-checklist{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:10px 14px;margin:10px 0;display:flex;flex-direction:column;gap:6px}
+.sc-item{font-size:13px;color:#94a3b8;padding:3px 0;transition:color .2s}
+.sc-active{color:#2563eb;font-weight:500}
+.sc-done{color:#16a34a;font-weight:500}
+.sc-error{color:#dc2626;font-weight:500}
+.match-preview{display:flex;align-items:center;gap:14px;margin:10px 0;padding:12px 16px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px}
+.match-img{width:52px;height:52px;border-radius:50%;object-fit:cover;border:3px solid #16a34a;flex-shrink:0}
+.match-name{font-size:15px;font-weight:600;color:#0f172a}
+.match-conf{font-size:12px;color:#16a34a;margin-top:2px;font-weight:500}
+.big-icon{font-size:52px;margin-bottom:1rem}
+.id-box{background:#eff6ff;border:2px solid #bfdbfe;border-radius:16px;padding:1.5rem;margin:1.5rem 0}
+.id-lbl{font-size:11px;font-weight:600;color:#3b82f6;text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px}
+.id-val{font-size:2.5rem;font-weight:700;font-family:'DM Mono',monospace;color:#1d4ed8;letter-spacing:3px}
+.id-note{font-size:12px;color:#60a5fa;margin-top:6px}
+.big-thumb{width:90px;height:90px;border-radius:50%;object-fit:cover;border:3px solid #bfdbfe;margin:0 auto;display:block}
+.pulse{animation:pulse 1.5s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.09)}}
+.q-box{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:1.25rem;margin:1.25rem 0;text-align:center}
+.ql{font-size:11px;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+.qp{font-size:3rem;font-weight:700;color:#2563eb;line-height:1}
+.qn{font-size:15px;font-weight:500;color:#1e293b;margin-top:8px}
+.qv{font-size:13px;font-family:'DM Mono',monospace;color:#64748b;margin-top:3px}
+.ballot-card{background:#fff;border:1px solid #e2e8f0;border-radius:22px;padding:2rem;box-shadow:0 4px 24px rgba(0,0,0,.06)}
+.ballot-card h2{font-size:1.3rem;font-weight:700;color:#0f172a;margin-bottom:6px}
+.e-bar{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:8px 14px;font-size:13px;font-weight:500;color:#64748b;margin:10px 0}
+.v-bar{font-size:13px;color:#2563eb;background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:8px 14px;margin-bottom:12px}
+.b-opt{display:flex;align-items:center;gap:14px;padding:14px 16px;border:2px solid #e2e8f0;border-radius:13px;margin-bottom:10px;cursor:pointer;transition:all .15s}
+.b-opt:hover{border-color:#93c5fd;background:#f0f7ff}
+.b-opt.sel{border-color:#2563eb;background:#eff6ff}
+.c-av{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;flex-shrink:0}
+.c-nm{font-size:15px;font-weight:600;color:#0f172a}
+.c-pt{font-size:13px;color:#94a3b8;margin-top:2px}
+.radio{width:22px;height:22px;border-radius:50%;border:2px solid #cbd5e1;margin-left:auto;flex-shrink:0;transition:all .15s;display:flex;align-items:center;justify-content:center}
+.b-opt.sel .radio{border-color:#2563eb;background:#2563eb}
+.b-opt.sel .radio::after{content:'';width:8px;height:8px;border-radius:50%;background:#fff}
+.voted-box{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:1rem 1.25rem;margin:1.25rem 0;font-size:15px;color:#15803d;font-weight:500}
+  
+input[type=email]{width:100%;height:46px;padding:0 14px;border:1px solid #cbd5e1;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:15px;color:#1e293b;outline:none;transition:border-color .15s,box-shadow .15s;background:#fff}
+input[type=email]:focus{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.1)}
+input[type=email]::placeholder{color:#94a3b8}
+.email-row{display:flex;gap:8px;align-items:center;margin-top:5px}
+  </style>
+</head>
+<body>
+<header class="hdr">
+  <div class="hdr-in">
+    <div class="hdr-logo">🗳️ <span>Voter Portal</span></div>
+    <a href="index.html" class="hdr-back">← Home</a>
+  </div>
+</header>
+<div class="portal">
+
+  <!-- HOME -->
+  <div class="step active" id="s-home">
+    <div class="hero-card">
+      <div class="hi">🗳️</div>
+      <h1>Welcome, Voter!</h1>
+      <p id="home-p">Register with email OTP and dual face scan, or login with face to vote.</p>
+      <div class="hero-btns">
+        <button class="big-btn green" onclick="goTo('s-email')">
+          <span class="bbi">📝</span>
+          <div><div class="bbt">New Voter — Register</div><div class="bbs">Email OTP → Face Scan 1 → Face Scan 2</div></div>
+        </button>
+        <button class="big-btn blue" onclick="startLoginFlow()">
+          <span class="bbi">🤖</span>
+          <div><div class="bbt">Already Registered — Login</div><div class="bbs">Face scan → matches your record</div></div>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 1: EMAIL OTP -->
+  <div class="step" id="s-email">
+    <div class="fcard">
+      <div class="step-flow">
+        <div class="sf sf-done">✓ Start</div><div class="sf-arrow">→</div>
+        <div class="sf sf-active">📧 Email OTP</div><div class="sf-arrow">→</div>
+        <div class="sf">📷 Face 1</div><div class="sf-arrow">→</div>
+        <div class="sf">📷 Face 2</div><div class="sf-arrow">→</div>
+        <div class="sf">✅ Done</div>
+      </div>
+      <h2>Step 1 — Email Verification</h2>
+      <p class="fsub">Enter your details and verify your email address with a one-time OTP code.</p>
+
+      <label>Full Name</label>
+      <input type="text" id="r-name" placeholder="e.g. Ravi Kumar"/>
+
+      <label>Age</label>
+      <input type="number" id="r-age" placeholder="Must be 18 or above" min="18"/>
+
+      <label>Email Address</label>
+      <div class="email-row">
+        <input type="email" id="r-email" placeholder="e.g. ravi@gmail.com" style="flex:1"/>
+        <button class="btn-otp" id="send-otp-btn" onclick="doSendOTP()">Send OTP</button>
+      </div>
+
+      <div id="otp-section" style="display:none">
+        <label>Enter OTP <span class="otp-timer" id="otp-timer"></span></label>
+
+        <input type="text" id="r-otp" placeholder="Enter 6-digit OTP" maxlength="6"
+               style="letter-spacing:.3em;font-size:1.2rem;text-align:center;font-family:'DM Mono',monospace"/>
+        <button class="btn-p" id="btn-verify-otp" onclick="doVerifyOTP()">Verify OTP → Proceed to Face Scan</button>
+      </div>
+
+      <div id="phone-msg" class="msg"></div>
+      <button class="lbtn" onclick="goTo('s-home')">← Back</button>
+    </div>
+  </div>
+
+  <!-- STEP 2: FACE SCAN #1 -->
+  <div class="step" id="s-face1">
+    <div class="fcard">
+      <div class="step-flow">
+        <div class="sf sf-done">✓ Email</div><div class="sf-arrow">→</div>
+        <div class="sf sf-active">📷 Face 1</div><div class="sf-arrow">→</div>
+        <div class="sf">📷 Face 2</div><div class="sf-arrow">→</div>
+        <div class="sf">✅ Done</div>
+      </div>
+      <h2>Step 2 — Face Scan #1 (Enrollment)</h2>
+      <p class="fsub">Look directly at the camera. This is your <strong>enrollment scan</strong>.</p>
+      <div class="cam-box">
+        <video id="vid1" autoplay muted playsinline class="cam-vid"></video>
+        <div class="cam-oval"></div>
+        <div class="cam-lbl" id="lbl1">Initialising camera…</div>
+      </div>
+      <div class="scan-checklist">
+        <div class="sc-item" id="sc1-dup">⏳ Checking for duplicate face…</div>
+        <div class="sc-item" id="sc1-detect">⏳ Capturing face…</div>
+      </div>
+      <button class="btn-p" id="btn-face1" onclick="doFace1Scan()" disabled>📸 Capture Face — Scan #1</button>
+      <div id="face1-msg" class="msg"></div>
+      <button class="lbtn" onclick="stopVid1(); goTo('s-email')">← Back</button>
+    </div>
+  </div>
+
+  <!-- STEP 3: FACE SCAN #2 -->
+  <div class="step" id="s-face2">
+    <div class="fcard">
+      <div class="step-flow">
+        <div class="sf sf-done">✓ Email</div><div class="sf-arrow">→</div>
+        <div class="sf sf-done">✓ Face 1</div><div class="sf-arrow">→</div>
+        <div class="sf sf-active">📷 Face 2</div><div class="sf-arrow">→</div>
+        <div class="sf">✅ Done</div>
+      </div>
+      <h2>Step 3 — Face Scan #2 (Confirmation)</h2>
+      <p class="fsub">Scan again to <strong>confirm it matches</strong> your first scan.</p>
+      <div class="compare-box">
+        <div class="compare-side">
+          <img id="thumb1-preview" class="compare-img" alt="Scan 1"/>
+          <div class="compare-lbl">📷 Your Scan #1</div>
+        </div>
+        <div class="compare-vs">VS</div>
+        <div class="compare-side">
+          <video id="vid2" autoplay muted playsinline class="compare-live"></video>
+          <div class="cam-oval-sm"></div>
+          <div class="compare-lbl">📷 Live Camera (Scan #2)</div>
+        </div>
+      </div>
+      <div class="cam-lbl-inline" id="lbl2">Initialising camera…</div>
+      <div class="scan-checklist">
+        <div class="sc-item" id="sc2-compare">⏳ Comparing scan #1 vs scan #2…</div>
+        <div class="sc-item" id="sc2-result">⏳ Confirming match result…</div>
+      </div>
+      <button class="btn-p" id="btn-face2" onclick="doFace2Scan()" disabled>🔍 Verify Face — Scan #2</button>
+      <div id="face2-msg" class="msg"></div>
+      <button class="lbtn" onclick="stopVid2(); goTo('s-face1')">← Retake Scan #1</button>
+    </div>
+  </div>
+
+  <!-- REGISTRATION SUCCESS -->
+  <div class="step" id="s-reg-ok">
+    <div class="fcard center">
+      <div class="big-icon">✅</div>
+      <h2>Registration Complete!</h2>
+      <p class="fsub">Both face scans matched. Save your Voter ID below.</p>
+      <div class="id-box">
+        <div class="id-lbl">Your Voter ID</div>
+        <div class="id-val" id="new-vid">—</div>
+        <div class="id-note" id="new-info"></div>
+      </div>
+      <img id="reg-thumb" class="big-thumb" style="display:none" alt="Your face"/>
+      <button class="btn-p" onclick="goTo('s-home')" style="margin-top:1.5rem">Done — Go to Login →</button>
+    </div>
+  </div>
+
+  <!-- LOGIN: FACE SCAN -->
+  <div class="step" id="s-login">
+    <div class="fcard">
+      <div class="step-flow">
+        <div class="sf sf-active">🤖 Face Login</div><div class="sf-arrow">→</div>
+        <div class="sf">📋 Queue</div><div class="sf-arrow">→</div>
+        <div class="sf">🗳️ Vote</div>
+      </div>
+      <h2>Login — Face Verification</h2>
+      <p class="fsub">The system searches for your face. No Voter ID needed — just look at the camera.</p>
+      <div class="cam-box">
+        <video id="login-vid" autoplay muted playsinline class="cam-vid"></video>
+        <div class="cam-oval"></div>
+        <div class="cam-lbl" id="login-lbl">Initialising camera…</div>
+      </div>
+      <div class="match-preview" id="match-preview" style="display:none">
+        <img id="match-thumb" class="match-img" alt=""/>
+        <div>
+          <div class="match-name" id="match-name"></div>
+          <div class="match-conf" id="match-conf"></div>
+        </div>
+      </div>
+      <div class="scan-checklist">
+        <div class="sc-item" id="lsc1">⏳ Searching for your face in voter database…</div>
+        <div class="sc-item" id="lsc2">⏳ Verifying voter eligibility…</div>
+        <div class="sc-item" id="lsc3">⏳ Joining voting queue…</div>
+      </div>
+      <button class="btn-p" id="login-btn" onclick="doLoginScan()" disabled>🤖 Scan Face to Login</button>
+      <div id="login-msg" class="msg"></div>
+      <button class="lbtn" onclick="stopLoginVid(); goTo('s-home')">← Back</button>
+    </div>
+  </div>
+
+  <!-- QUEUE -->
+  <div class="step" id="s-queue">
+    <div class="fcard center">
+      <div class="step-flow" style="justify-content:center">
+        <div class="sf sf-done">✓ Login</div><div class="sf-arrow">→</div>
+        <div class="sf sf-active">📋 Queue</div><div class="sf-arrow">→</div>
+        <div class="sf">🗳️ Vote</div>
+      </div>
+      <div class="big-icon pulse">⏳</div>
+      <h2>You're in the Queue!</h2>
+      <p class="fsub">Click below to check if it's your turn.</p>
+      <div class="q-box">
+        <div class="ql">Queue Position</div>
+        <div class="qp" id="q-pos">—</div>
+        <div class="qn" id="q-name"></div>
+        <div class="qv" id="q-vid"></div>
+      </div>
+      <button class="btn-p" onclick="checkTurn()" style="margin-top:1.5rem">Check My Turn →</button>
+      <div id="q-msg" class="msg"></div>
+    </div>
+  </div>
+
+  <!-- BALLOT -->
+  <div class="step" id="s-ballot">
+    <div class="ballot-card">
+      <div class="step-flow" style="justify-content:center">
+        <div class="sf sf-done">✓ Login</div><div class="sf-arrow">→</div>
+        <div class="sf sf-done">✓ Queue</div><div class="sf-arrow">→</div>
+        <div class="sf sf-active">🗳️ Vote</div>
+      </div>
+      <h2>Official Ballot</h2>
+      <div class="e-bar" id="b-etitle"></div>
+      <div class="v-bar" id="b-vinfo"></div>
+      <p class="fsub">Select one candidate. Your vote is final and secret.</p>
+      <div id="b-opts"></div>
+      <button class="btn-p" onclick="submitVote()" style="margin-top:1.5rem">✅ Submit My Vote</button>
+      <div id="b-msg" class="msg"></div>
+    </div>
+  </div>
+
+  <!-- DONE -->
+  <div class="step" id="s-done">
+    <div class="fcard center">
+      <div class="big-icon">🎉</div>
+      <h2>Vote Submitted!</h2>
+      <p class="fsub" id="done-msg"></p>
+      <div class="voted-box" id="done-cand"></div>
+      <button class="btn-outline" onclick="goTo('s-home')" style="margin-top:1.5rem;display:block;width:100%">Vote as Another Person</button>
+    </div>
+  </div>
+
+</div><!-- portal -->
+
+<script>
+
+// ── Config & DB ───────────────────────────────────────────────────────────────
+var STORE = 'ovs_v8'; // bumped to clear all previously registered voters
+var MAX   = 30;
+var AV_BG  = ['#dbeafe','#dcfce7','#fee2e2','#f3e8ff','#fef9c3','#cffafe'];
+var AV_TXT = ['#1d4ed8','#15803d','#b91c1c','#7e22ce','#854d0e','#0e7490'];
+
+var DB = {
+  _def: function() {
+    return { election:{is_active:false,title:'General Election 2025'}, candidates:{}, voters:{}, queue:[], votes_log:[], next_id:1001 };
+  },
+  get: function() {
+    try {
+      var d = JSON.parse(localStorage.getItem(STORE)||'null');
+      if (!d) return this._def();
+      d.queue=d.queue||[]; d.votes_log=d.votes_log||[]; d.candidates=d.candidates||{}; d.voters=d.voters||{};
+      return d;
+    } catch(e) { return this._def(); }
+  },
+  save: function(d) { localStorage.setItem(STORE, JSON.stringify(d)); }
+};
+
+function hashId(id) {
+  var h = 0;
+  for (var i=0; i<id.length; i++) h = (h*31 + id.charCodeAt(i)) % 16;
+  return h;
+}
+
+// ── State ─────────────────────────────────────────────────────────────────────
+// scan1Frame = full 320×240 dataUrl stored for comparison (NOT thumbnail)
+var regState = { name:'', age:0, phone:'', email:'', scan1Frame:null, scan1Thumb:null, scan1Descriptor:null, voterId:null };
+var currentVid  = null;
+var selectedIdx = null;
+
+// ── Nav ───────────────────────────────────────────────────────────────────────
+function goTo(id) {
+  document.querySelectorAll('.step').forEach(function(s) { s.classList.remove('active'); });
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function scItem(id, status, text) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  var icons = { pending:'⏳', active:'🔄', done:'✅', error:'❌' };
+  el.className = 'sc-item sc-' + status;
+  if (text) el.textContent = icons[status] + ' ' + text;
+}
+
+function showMsg(el, html, type) {
+  if (!el) return;
+  el.innerHTML = html;
+  el.className = 'msg msg-' + type;
+}
+
+// ── Camera ────────────────────────────────────────────────────────────────────
+function stopAllTracks(videoEl) {
+  if (videoEl && videoEl.srcObject) {
+    videoEl.srcObject.getTracks().forEach(function(t) { t.stop(); });
+    videoEl.srcObject = null;
+  }
+}
+
+function startCamera(videoEl, labelEl, text, cb) {
+  // Always fully stop existing stream first
+  stopAllTracks(videoEl);
+
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    if (labelEl) labelEl.textContent = '⚠️ Camera not supported in this browser.';
+    cb(null); return;
+  }
+
+  navigator.mediaDevices.getUserMedia({ video: { width: { ideal: 640 }, height: { ideal: 480 }, facingMode: 'user' } })
+    .then(function(stream) {
+      videoEl.srcObject = stream;
+      videoEl.onloadedmetadata = null; // clear old handler
+
+      function onReady() {
+        videoEl.play().then(function() {
+          // Poll until frames are actually flowing
+          var tries = 0;
+          function poll() {
+            if (videoEl.videoWidth > 0 && videoEl.readyState >= 2 && !videoEl.paused) {
+              if (labelEl) labelEl.textContent = text || '📷 Camera ready';
+              cb(stream);
+            } else if (tries++ < 25) {
+              setTimeout(poll, 200);
+            } else {
+              // Give up waiting and proceed anyway
+              if (labelEl) labelEl.textContent = text || '📷 Camera ready';
+              cb(stream);
+            }
+          }
+          poll();
+        }).catch(function(e) {
+          if (labelEl) labelEl.textContent = '⚠️ Could not start video: ' + e.message;
+          cb(null);
+        });
+      }
+
+      if (videoEl.readyState >= 1) {
+        onReady();
+      } else {
+        videoEl.onloadedmetadata = onReady;
+      }
+    })
+    .catch(function(e) {
+      var msg = '⚠️ Camera blocked. Allow camera access and refresh.';
+      if (e.name === 'NotAllowedError') msg = '⚠️ Camera permission denied. Please allow camera and refresh.';
+      if (e.name === 'NotFoundError')   msg = '⚠️ No camera found on this device.';
+      if (labelEl) labelEl.textContent = msg;
+      cb(null);
+    });
+}
+
+function stopCamera(videoEl) {
+  if (videoEl && videoEl.srcObject) {
+    videoEl.srcObject.getTracks().forEach(function(t) { t.stop(); });
+    videoEl.srcObject = null;
+  }
+}
+
+// Capture FULL frame at fixed 320×240 — used for ALL face comparisons
+// Fixed size ensures scan1 and scan2 are always comparable
+function captureFrame(videoEl) {
+  var W = 320, H = 240;
+  var c = document.createElement('canvas');
+  c.width = W; c.height = H;
+  c.getContext('2d').drawImage(videoEl, 0, 0, W, H);
+  return c.toDataURL('image/jpeg', 0.90);
+}
+
+// Circular 90×90 thumbnail — for DISPLAY ONLY, never used in comparison
+function makeThumbnail(videoEl) {
+  var c = document.createElement('canvas');
+  c.width = c.height = 90;
+  var ctx = c.getContext('2d');
+  ctx.beginPath(); ctx.arc(45,45,45,0,Math.PI*2); ctx.clip();
+  var s  = Math.min(videoEl.videoWidth||320, videoEl.videoHeight||240);
+  var ox = ((videoEl.videoWidth||320) - s)/2;
+  var oy = ((videoEl.videoHeight||240) - s)/2;
+  ctx.drawImage(videoEl, ox, oy, s, s, 0, 0, 90, 90);
+  return c.toDataURL('image/jpeg', 0.80);
+}
+
+// ── Real ML Face Recognition via face-api.js ─────────────────────────────────
+// Uses TinyFaceDetector + FaceRecognitionNet for 128-D face descriptors.
+// inputSize 416 + scoreThreshold 0.3 = much more reliable webcam detection.
+
+var _faceModelsLoaded = false;
+var _faceModelsLoading = null;
+var MODELS_URL = 'https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.13/model';
+
+function loadFaceModels() {
+  if (_faceModelsLoaded) return Promise.resolve();
+  if (_faceModelsLoading) return _faceModelsLoading;
+  _faceModelsLoading = Promise.all([
+    faceapi.nets.tinyFaceDetector.loadFromUri(MODELS_URL),
+    faceapi.nets.faceLandmark68TinyNet.loadFromUri(MODELS_URL),
+    faceapi.nets.faceRecognitionNet.loadFromUri(MODELS_URL)
+  ]).then(function() {
+    _faceModelsLoaded = true;
+  });
+  return _faceModelsLoading;
+}
+
+// Pre-load models as soon as the page is ready
+document.addEventListener('DOMContentLoaded', function() { loadFaceModels(); });
+
+// Wait for video to be truly ready (has real frames)
+function waitForVideoReady(videoEl) {
+  return new Promise(function(resolve) {
+    var checks = 0;
+    function check() {
+      if (videoEl.readyState >= 2 && videoEl.videoWidth > 0 && !videoEl.paused) {
+        resolve();
+      } else if (checks++ < 30) {
+        setTimeout(check, 200);
+      } else {
+        resolve(); // proceed anyway after 6 seconds
+      }
+    }
+    check();
+  });
+}
+
+// Try detecting with progressively lower thresholds — never give up on a real face
+function _detectDescriptor(el) {
+  var thresholds = [0.3, 0.2, 0.1];
+  var inputSizes = [416, 320, 224];
+
+  function tryDetect(i) {
+    if (i >= thresholds.length) {
+      return Promise.resolve({ ok: false, reason: 'No face detected. Please centre your face, ensure good lighting, and try again.' });
+    }
+    return faceapi
+      .detectSingleFace(el, new faceapi.TinyFaceDetectorOptions({ inputSize: inputSizes[i], scoreThreshold: thresholds[i] }))
+      .withFaceLandmarks(true)
+      .withFaceDescriptor()
+      .then(function(det) {
+        if (det) return { ok: true, descriptor: det.descriptor };
+        return tryDetect(i + 1); // retry with lower threshold
+      });
+  }
+  return tryDetect(0);
+}
+
+// Returns { descriptor: Float32Array, ok: true } or { ok: false, reason: string }
+function getFaceDescriptor(source) {
+  return loadFaceModels().then(function() {
+    if (typeof source === 'string') {
+      return new Promise(function(resolve) {
+        var img = new Image();
+        img.onload = function() { resolve(img); };
+        img.onerror = function() { resolve(null); };
+        img.src = source;
+      }).then(function(img) {
+        if (!img) return { ok: false, reason: 'Could not load image.' };
+        return _detectDescriptor(img);
+      });
+    }
+    // For video elements, wait until frames are actually flowing
+    if (source && source.tagName === 'VIDEO') {
+      return waitForVideoReady(source).then(function() {
+        return _detectDescriptor(source);
+      });
+    }
+    return _detectDescriptor(source);
+  });
+}
+
+// Euclidean distance between two Float32Array descriptors
+function descriptorDistance(a, b) {
+  if (!a || !b || a.length !== b.length) return 1.0;
+  var sum = 0;
+  for (var i = 0; i < a.length; i++) { var d = a[i] - b[i]; sum += d * d; }
+  return Math.sqrt(sum);
+}
+
+// Convert stored plain array back to Float32Array
+function toFloat32(arr) {
+  if (!arr) return null;
+  if (arr instanceof Float32Array) return arr;
+  return new Float32Array(arr);
+}
+
+// distance < 0.55 = same person (login / duplicate check)
+// distance < 0.65 = same person (scan1 vs scan2 — same session, more lenient)
+var FACE_MATCH_THRESHOLD      = 0.40;  // duplicate check & login — strict: only block truly identical face
+var FACE_SCAN_MATCH_THRESHOLD = 0.75;  // scan1 vs scan2 — lenient: same person same session
+
+// Compare two face descriptors — threshold is optional (default: FACE_MATCH_THRESHOLD)
+function compareDescriptors(desc1, desc2, threshold) {
+  threshold = threshold || FACE_MATCH_THRESHOLD;
+  var dist  = descriptorDistance(toFloat32(desc1), toFloat32(desc2));
+  var match = dist < threshold;
+  var score = Math.max(0, Math.round((1 - dist / threshold) * 100));
+  return { match: match, score: score, distance: dist };
+}
+
+// ── Liveness check: only block a completely dead/frozen camera feed ──
+// Threshold is set very low (0.05) — we only want to catch a frozen/black
+// camera frame, not penalise people who sit still in good lighting.
+function checkLiveness(videoEl) {
+  return new Promise(function(resolve) {
+    // If video isn't playing at all, skip liveness and pass
+    if (!videoEl || !videoEl.srcObject || videoEl.paused || videoEl.videoWidth === 0) {
+      resolve({ live: true, avgDiff: 1 });
+      return;
+    }
+    var W = 64, H = 48;
+    function grabGray() {
+      var c = document.createElement('canvas');
+      c.width = W; c.height = H;
+      var ctx = c.getContext('2d');
+      ctx.drawImage(videoEl, 0, 0, W, H);
+      var px = ctx.getImageData(0, 0, W, H).data;
+      var gray = new Uint8Array(W * H);
+      for (var i = 0, j = 0; i < px.length; i += 4, j++)
+        gray[j] = Math.round(0.299 * px[i] + 0.587 * px[i+1] + 0.114 * px[i+2]);
+      return gray;
+    }
+    var frame1 = grabGray();
+    // Check if frame1 is all black (camera not actually producing frames)
+    var sum1 = 0;
+    for (var k = 0; k < frame1.length; k++) sum1 += frame1[k];
+    if (sum1 === 0) { resolve({ live: true, avgDiff: 1 }); return; } // black frame = skip check
+    setTimeout(function() {
+      var frame2 = grabGray();
+      var diff = 0;
+      for (var i = 0; i < frame1.length; i++)
+        diff += Math.abs(frame1[i] - frame2[i]);
+      var avgDiff = diff / frame1.length;
+      // Only fail if COMPLETELY frozen (avgDiff < 0.05) — real webcams always
+      // have some compression noise even on a still face
+      resolve({ live: avgDiff >= 0.05, avgDiff: avgDiff });
+    }, 600);
+  });
+}
+
+// ── Detect face from live video element, returns descriptor or null ───────────
+function detectFaceFromVideo(videoEl) {
+  return getFaceDescriptor(videoEl);
+}
+
+// ── Find duplicate: check new descriptor against all stored voters ─────────────
+function findDuplicateFace(newDescriptor) {
+  var db = DB.get();
+  var voters = Object.values(db.voters).filter(function(v) { return !!v.face_descriptor; });
+  if (!voters.length) return Promise.resolve(null);
+  var found = null;
+  for (var i = 0; i < voters.length; i++) {
+    var result = compareDescriptors(newDescriptor, voters[i].face_descriptor, FACE_MATCH_THRESHOLD);
+    if (result.match) { found = voters[i]; break; }
+  }
+  return Promise.resolve(found);
+}
+
+// ── Find which voter this face belongs to (login — pick best/closest match) ───
+function findVoterByFace(liveDescriptor) {
+  var db = DB.get();
+  var voters = Object.values(db.voters).filter(function(v) { return !!v.face_descriptor; });
+  if (!voters.length) return Promise.resolve(null);
+  var best = null, bestDist = 1.0;
+  for (var i = 0; i < voters.length; i++) {
+    var result = compareDescriptors(liveDescriptor, voters[i].face_descriptor, FACE_MATCH_THRESHOLD);
+    if (result.match && result.distance < bestDist) {
+      bestDist = result.distance;
+      best = { voter: voters[i], score: result.score };
+    }
+  }
+  return Promise.resolve(best);
+}
+
+// ── Compare scan1 vs scan2 — uses LOOSER threshold (same person, same session) ─
+function compareScanDescriptors(desc1, desc2) {
+  if (!desc1 || !desc2) return Promise.reject(new Error('Face descriptor missing — please retake Scan #1.'));
+  return Promise.resolve(compareDescriptors(desc1, desc2, FACE_SCAN_MATCH_THRESHOLD));
+}
+
+// ── OTP — sent via EmailJS (no server needed) ────────────────────────────────
+var _otpStore = {}; // { email: { otp, expires } }
+
+(function() {
+  if (window.emailjs && EMAILJS_PUBLIC_KEY !== 'YOUR_PUBLIC_KEY') {
+    emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+  }
+})();
+
+function sendOTP(email, callback) {
+  // Generate OTP
+  var otp = String(Math.floor(100000 + Math.random() * 900000));
+  _otpStore[email] = { otp: otp, expires: Date.now() + 5 * 60 * 1000 };
+
+  if (!window.emailjs || EMAILJS_PUBLIC_KEY === 'YOUR_PUBLIC_KEY') {
+    callback({ success: false, message: 'EmailJS not configured. See EMAILJS_SETUP.txt for instructions.' });
+    return;
+  }
+
+  emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+
+  emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+    email: email,
+    passcode: otp,
+    time: '5 minutes from now'
+  })
+  .then(function() {
+    callback({ success: true, message: 'OTP sent to ' + email });
+  })
+  .catch(function(err) {
+    delete _otpStore[email];
+    callback({ success: false, message: 'Failed to send email: ' + (err.text || err.message || 'Check your EmailJS config') });
+  });
+}
+
+function verifyOTPApi(email, otp, callback) {
+  var record = _otpStore[email];
+  if (!record) { callback({ success: false, message: 'No OTP sent. Click Send OTP first.' }); return; }
+  if (Date.now() > record.expires) { delete _otpStore[email]; callback({ success: false, message: 'OTP expired. Please resend.' }); return; }
+  if (otp.trim() !== record.otp) { callback({ success: false, message: 'Incorrect OTP. Try again.' }); return; }
+  delete _otpStore[email];
+  callback({ success: true, message: 'OTP verified successfully.' });
+}
+
+// ── STEP 1: OTP ───────────────────────────────────────────────────────────────
+var otpPhone = '';
+var otpTimer = null;
+
+function doSendOTP() {
+  var name  = document.getElementById('r-name').value.trim();
+  var age   = parseInt(document.getElementById('r-age').value, 10);
+  var email = document.getElementById('r-email').value.trim().toLowerCase();
+  var msg   = document.getElementById('phone-msg');
+  var btn   = document.getElementById('send-otp-btn');
+
+  if (!name)              { showMsg(msg,'Please enter your full name.','err'); return; }
+  if (isNaN(age)||age<18) { showMsg(msg,'Must be 18 or older.','err'); return; }
+  if (!email || !email.includes('@') || !email.includes('.')) { showMsg(msg,'Enter a valid email address.','err'); return; }
+
+  var db = DB.get();
+  if (Object.keys(db.voters).length >= MAX) { showMsg(msg,'⚠️ Maximum 30 voters reached.','err'); return; }
+  if (Object.values(db.voters).find(function(v) { return v.email===email; })) {
+    showMsg(msg,'❌ This email address is already registered.','err'); return;
+  }
+
+  // Disable button and show sending status
+  btn.disabled = true;
+  btn.textContent = 'Sending…';
+  showMsg(msg,'📧 Sending OTP to ' + email + '…','info');
+
+  otpPhone = email;
+  sendOTP(email, function(data) {
+    if (data.success) {
+      showMsg(msg,'✅ OTP sent to <strong>' + email + '</strong>. Check your inbox (also check spam folder).','ok');
+      document.getElementById('otp-section').style.display = 'block';
+      btn.textContent = 'Resend OTP';
+
+      var secs = 300;
+      clearInterval(otpTimer);
+      var timerEl = document.getElementById('otp-timer');
+      otpTimer = setInterval(function() {
+        secs--;
+        if (secs <= 0) {
+          clearInterval(otpTimer);
+          timerEl.textContent = '(expired — resend)';
+          btn.disabled = false;
+        } else {
+          var m = String(Math.floor(secs/60)).padStart(2,'0');
+          var s = String(secs%60).padStart(2,'0');
+          timerEl.textContent = '(expires in ' + m + ':' + s + ')';
+        }
+      }, 1000);
+    } else {
+      showMsg(msg,'❌ Failed to send OTP: ' + data.message,'err');
+      btn.disabled = false;
+      btn.textContent = 'Send OTP';
+    }
+  });
+}
+
+function doVerifyOTP() {
+  var otp  = document.getElementById('r-otp').value.trim();
+  var msg  = document.getElementById('phone-msg');
+  var btn  = document.getElementById('btn-verify-otp');
+
+  if (!otp || otp.length !== 6) { showMsg(msg,'❌ Enter the 6-digit OTP from your email.','err'); return; }
+
+  if (btn) { btn.disabled = true; btn.textContent = 'Verifying…'; }
+  showMsg(msg,'🔍 Verifying OTP…','info');
+
+  verifyOTPApi(otpPhone, otp, function(data) {
+    if (btn) { btn.disabled = false; btn.textContent = 'Verify OTP → Proceed to Face Scan'; }
+    if (!data.success) { showMsg(msg,'❌ ' + data.message,'err'); return; }
+    clearInterval(otpTimer);
+    regState.name  = document.getElementById('r-name').value.trim();
+    regState.age   = parseInt(document.getElementById('r-age').value, 10);
+    regState.email = otpPhone;
+    showMsg(msg,'✅ Email verified! Proceeding to Face Scan #1…','ok');
+    setTimeout(function() { goTo('s-face1'); initFace1(); }, 700);
+  });
+}
+
+// ── STEP 2: FACE SCAN #1 ──────────────────────────────────────────────────────
+function initFace1() {
+  scItem('sc1-dup','pending','Checking for duplicate face…');
+  scItem('sc1-detect','pending','Capturing face…');
+  document.getElementById('face1-msg').textContent = '';
+  document.getElementById('btn-face1').disabled = true;
+  document.getElementById('lbl1').textContent = 'Loading AI face models…';
+  // Load models first, then start camera
+  loadFaceModels().then(function() {
+    startCamera(document.getElementById('vid1'), document.getElementById('lbl1'),
+      '📷 Camera ready — look directly at camera, then click Capture',
+      function(stream) {
+        if (stream) setTimeout(function() { document.getElementById('btn-face1').disabled = false; }, 1500);
+      }
+    );
+  }).catch(function() {
+    document.getElementById('lbl1').textContent = '⚠️ Failed to load AI models. Please refresh.';
+  });
+}
+
+function stopVid1() { stopAllTracks(document.getElementById('vid1')); }
+
+function retryFace1() {
+  scItem('sc1-dup','pending','Checking for duplicate face…');
+  scItem('sc1-detect','pending','Capturing face…');
+  document.getElementById('face1-msg').textContent = '';
+  document.getElementById('btn-face1').disabled = true;
+  document.getElementById('lbl1').textContent = 'Restarting camera…';
+  loadFaceModels().then(function() {
+    startCamera(document.getElementById('vid1'), document.getElementById('lbl1'),
+      '📷 Camera ready — look directly at camera, then click Capture',
+      function(stream) {
+        if (stream) setTimeout(function() { document.getElementById('btn-face1').disabled = false; }, 1500);
+      }
+    );
+  });
+}
+
+function doFace1Scan() {
+  var btn  = document.getElementById('btn-face1');
+  var msg  = document.getElementById('face1-msg');
+  var vid1 = document.getElementById('vid1');
+  btn.disabled = true;
+  document.getElementById('lbl1').textContent = '🔍 Checking liveness…';
+  scItem('sc1-detect','active','Checking for live face…');
+
+  // Step 0: Liveness check — reject photos/printouts held up to camera
+  checkLiveness(vid1).then(function(liveness) {
+    if (!liveness.live) {
+      scItem('sc1-detect','error','Liveness check failed — no live face detected');
+      showMsg(msg,
+        '❌ <strong>Liveness Check Failed!</strong><br><br>' +
+        'A static photo or screen was detected instead of a real face.<br><br>' +
+        '• Look directly and naturally at the camera<br>' +
+        '• Do not hold up a photo or phone screen<br>' +
+        '• Slight natural movement is required',
+        'err'
+      );
+      btn.disabled = false;
+      document.getElementById('lbl1').textContent = '📷 Try again with your real face';
+      return;
+    }
+
+  document.getElementById('lbl1').textContent = '🔍 Detecting face…';
+
+  // Step 1: Detect real face from live video using ML
+  detectFaceFromVideo(vid1).then(function(detection) {
+    if (!detection.ok) {
+      scItem('sc1-detect','error','No face detected');
+      showMsg(msg, '❌ <strong>No Face Detected!</strong><br><br>' + detection.reason + '<br><br>Tips:<br>• Look directly at the camera<br>• Make sure your face is well-lit<br>• Remove sunglasses or face coverings', 'err');
+      btn.disabled = false;
+      document.getElementById('lbl1').textContent = '📷 Try again — centre your face';
+      return;
+    }
+
+    // Face confirmed — capture frame and thumbnail for display/storage
+    var frame1 = captureFrame(vid1);
+    var thumb1 = makeThumbnail(vid1);
+    var desc1  = detection.descriptor; // 128-D Float32Array
+
+    scItem('sc1-detect','done','Real face detected ✅');
+    scItem('sc1-dup','active','Checking for duplicate face…');
+
+    // Step 2: Check if this face is already registered
+    findDuplicateFace(desc1).then(function(dupVoter) {
+      if (dupVoter) {
+        scItem('sc1-dup','error','Duplicate face found — BLOCKED');
+        stopCamera(vid1);
+        showMsg(msg,
+          '❌ <strong>Face Already Registered!</strong><br><br>' +
+          'This face is already registered as <strong>' + dupVoter.name + '</strong>.<br>' +
+          'One face = one registration.<br><br>' +
+          '<button onclick="retryFace1()" style="background:#2563eb;color:#fff;border:none;padding:8px 18px;border-radius:8px;cursor:pointer;font-size:14px;">🔄 Try Again with Camera</button>',
+          'err'
+        );
+        btn.disabled = false;
+        return;
+      }
+
+      scItem('sc1-dup','done','No duplicate — new voter ✅');
+      document.getElementById('lbl1').textContent = '✅ Scan #1 captured!';
+
+      // Store descriptor + frame for scan2 comparison
+      regState.scan1Frame      = frame1;
+      regState.scan1Thumb      = thumb1;
+      regState.scan1Descriptor = Array.from(desc1); // store as plain array (JSON-serializable)
+      var db = DB.get();
+      regState.voterId = 'V' + db.next_id;
+      stopCamera(vid1);
+
+      showMsg(msg,'✅ Face Scan #1 complete! Proceeding to Scan #2 to confirm identity.','ok');
+      document.getElementById('thumb1-preview').src = thumb1;
+      setTimeout(function() { goTo('s-face2'); initFace2(); }, 900);
+    });
+  }).catch(function(e) {
+    scItem('sc1-detect','error','Detection error');
+    showMsg(msg, '❌ <strong>Error detecting face:</strong> ' + (e.message||e) + '<br><br>Please try again.', 'err');
+    btn.disabled = false;
+  }); // detectFaceFromVideo
+  }).catch(function(e) {
+    scItem('sc1-detect','error','Camera error');
+    showMsg(msg, '❌ <strong>Camera error:</strong> ' + (e.message||e) + '<br><br>Please try again.', 'err');
+    btn.disabled = false;
+  }); // checkLiveness
+}
+
+// ── STEP 3: FACE SCAN #2 ──────────────────────────────────────────────────────
+// Captures FULL FRAME at 320×240 → compares with scan1 FULL FRAME
+// Both same size → fair comparison → same person ALWAYS matches
+function initFace2() {
+  scItem('sc2-compare','pending','Comparing Scan #1 vs Scan #2…');
+  scItem('sc2-result','pending','Confirming match result…');
+  document.getElementById('face2-msg').textContent = '';
+  document.getElementById('btn-face2').disabled = true;
+  document.getElementById('lbl2').textContent = 'Initialising camera…';
+  loadFaceModels().then(function() {
+    startCamera(document.getElementById('vid2'), document.getElementById('lbl2'),
+      '📷 Camera ready — look at camera again, then click Verify',
+      function(stream) {
+        if (stream) setTimeout(function() { document.getElementById('btn-face2').disabled = false; }, 1500);
+      }
+    );
+  });
+}
+
+function stopVid2() { stopAllTracks(document.getElementById('vid2')); }
+
+function doFace2Scan() {
+  var btn  = document.getElementById('btn-face2');
+  var msg  = document.getElementById('face2-msg');
+  var vid2 = document.getElementById('vid2');
+  btn.disabled = true;
+  document.getElementById('lbl2').textContent = '🔍 Checking liveness…';
+  scItem('sc2-compare','active','Checking for live face…');
+
+  // Step 0: Liveness check — reject photos/printouts
+  checkLiveness(vid2).then(function(liveness) {
+    if (!liveness.live) {
+      scItem('sc2-compare','error','Liveness check failed');
+      showMsg(msg,
+        '❌ <strong>Liveness Check Failed!</strong><br><br>' +
+        'A static photo or screen was detected.<br>' +
+        'Please look naturally at the camera.<br><br>' +
+        '<button onclick="retryFace2()" style="background:#2563eb;color:#fff;border:none;padding:8px 18px;border-radius:8px;cursor:pointer;font-size:14px;">🔄 Try Again</button>',
+        'err'
+      );
+      btn.disabled = false;
+      return;
+    }
+
+  document.getElementById('lbl2').textContent = '🔍 Detecting face…';
+
+  // Step 1: Detect real face from live video
+  detectFaceFromVideo(vid2).then(function(detection) {
+    if (!detection.ok) {
+      scItem('sc2-compare','error','No face detected in Scan #2');
+      showMsg(msg,
+        '❌ <strong>No Face Detected!</strong><br><br>' + detection.reason + '<br><br>' +
+        '<button onclick="retryFace2()" style="background:#2563eb;color:#fff;border:none;padding:8px 18px;border-radius:8px;cursor:pointer;font-size:14px;">🔄 Try Again</button>',
+        'err'
+      );
+      btn.disabled = false;
+      return;
+    }
+
+    var frame2 = captureFrame(vid2);
+    var thumb2 = makeThumbnail(vid2);
+    var desc2  = detection.descriptor;
+
+    document.getElementById('lbl2').textContent = 'Comparing with Scan #1…';
+
+    // Step 2: Compare scan2 descriptor with scan1 descriptor
+    compareScanDescriptors(regState.scan1Descriptor, Array.from(desc2)).then(function(result) {
+      if (!result.match) {
+        scItem('sc2-compare','error','Face mismatch — scans do not match!');
+        scItem('sc2-result','error','Registration blocked');
+        showMsg(msg,
+          '❌ <strong>Face Mismatch!</strong><br><br>'
+          + 'Scan #2 does not match Scan #1.<br>'
+          + '• Make sure your face is well-lit and centred<br>'
+          + '• Stay at the same distance from the camera<br><br>'
+          + '<button onclick="retryFace2()" style="background:#2563eb;color:#fff;border:none;padding:8px 18px;border-radius:8px;cursor:pointer;font-size:14px;">🔄 Try Again</button>',
+          'err'
+        );
+        btn.disabled = false;
+        return;
+      }
+
+      var score = result.score;
+      scItem('sc2-compare','done','Faces match — ' + score + '% confidence ✅');
+      scItem('sc2-result','active','Saving voter registration…');
+      stopCamera(vid2);
+
+      // Save voter — store face_descriptor (128-D) for login + face_data for display
+      var db  = DB.get();
+      var vid = regState.voterId;
+      db.voters[vid] = {
+        voter_id:        vid,
+        name:            regState.name,
+        age:             regState.age,
+        email:           regState.email,
+        bucket:          hashId(vid),
+        face_thumb:      thumb2,              // display only
+        face_data:       frame2,              // frame image for display
+        face_descriptor: Array.from(desc2),   // 128-D descriptor — used for ALL comparisons
+        has_voted:       false,
+        registered_at:   Date.now()
+      };
+      db.next_id++;
+      DB.save(db);
+
+      scItem('sc2-result','done','Voter registered successfully ✅');
+      document.getElementById('new-vid').textContent  = vid;
+      document.getElementById('new-info').textContent = 'Email: ' + regState.email + ' · Hash bucket: ' + hashId(vid) + ' · Both face scans matched (' + score + '%) ✅';
+      var thumbEl = document.getElementById('reg-thumb');
+      thumbEl.src = thumb2; thumbEl.style.display = 'block';
+
+      regState = { name:'', age:0, phone:'', scan1Frame:null, scan1Thumb:null, scan1Descriptor:null, voterId:null };
+      document.getElementById('r-name').value  = '';
+      document.getElementById('r-age').value   = '';
+      document.getElementById('r-phone').value = '';
+      document.getElementById('r-otp').value   = '';
+      document.getElementById('otp-section').style.display = 'none';
+      document.getElementById('send-otp-btn').disabled = false;
+      goTo('s-reg-ok');
+    });
+  }).catch(function(e) {
+    scItem('sc2-compare','error','Detection error');
+    showMsg(msg, '❌ <strong>Error detecting face:</strong> ' + (e.message||e) + '<br><br><button onclick="retryFace2()" style="background:#2563eb;color:#fff;border:none;padding:8px 18px;border-radius:8px;cursor:pointer;font-size:14px;">🔄 Try Again</button>', 'err');
+    btn.disabled = false;
+  }); // detectFaceFromVideo
+  }).catch(function(e) {
+    scItem('sc2-compare','error','Liveness check error');
+    showMsg(msg, '❌ <strong>Camera error during liveness check:</strong> ' + (e.message||e) + '<br><br><button onclick="retryFace2()" style="background:#2563eb;color:#fff;border:none;padding:8px 18px;border-radius:8px;cursor:pointer;font-size:14px;">🔄 Try Again</button>', 'err');
+    btn.disabled = false;
+  }); // checkLiveness
+}
+
+function retryFace2() {
+  scItem('sc2-compare','pending','Comparing Scan #1 vs Scan #2…');
+  scItem('sc2-result','pending','Confirming match result…');
+  document.getElementById('face2-msg').textContent = '';
+  document.getElementById('btn-face2').disabled = true;
+  loadFaceModels().then(function() {
+    startCamera(document.getElementById('vid2'), document.getElementById('lbl2'),
+      '📷 Camera ready — look at camera and click Verify again',
+      function(stream) {
+        if (stream) setTimeout(function() { document.getElementById('btn-face2').disabled = false; }, 1500);
+      }
+    );
+  });
+}
+
+// ── LOGIN ──────────────────────────────────────────────────────────────────────
+function startLoginFlow() {
+  ['lsc1','lsc2','lsc3'].forEach(function(id) {
+    scItem(id,'pending', id==='lsc1' ? 'Searching for your face in voter database…' : id==='lsc2' ? 'Verifying voter eligibility…' : 'Joining voting queue…');
+  });
+  document.getElementById('login-msg').textContent = '';
+  document.getElementById('login-btn').disabled = true;
+  document.getElementById('match-preview').style.display = 'none';
+  document.getElementById('login-lbl').textContent = 'Loading AI face models…';
+  goTo('s-login');
+  loadFaceModels().then(function() {
+    startCamera(document.getElementById('login-vid'), document.getElementById('login-lbl'),
+      '📷 Camera ready — look at camera, then click Scan Face',
+      function(stream) {
+        if (stream) setTimeout(function() { document.getElementById('login-btn').disabled = false; }, 1500);
+      }
+    );
+  });
+}
+
+function stopLoginVid() { stopCamera(document.getElementById('login-vid')); }
+
+function doLoginScan() {
+  var btn    = document.getElementById('login-btn');
+  var msg    = document.getElementById('login-msg');
+  var loginV = document.getElementById('login-vid');
+  btn.disabled = true;
+  var db = DB.get();
+  if (!db.election.is_active) {
+    showMsg(msg,'❌ The election has not started yet. Please wait for the admin.','err');
+    btn.disabled = false; return;
+  }
+  scItem('lsc1','active','Checking liveness…');
+  document.getElementById('login-lbl').textContent = '🔍 Checking liveness…';
+
+  // Step 0: Liveness check — reject photos/printouts
+  checkLiveness(loginV).then(function(liveness) {
+    if (!liveness.live) {
+      scItem('lsc1','error','Liveness check failed');
+      showMsg(msg,
+        '❌ <strong>Liveness Check Failed!</strong><br><br>' +
+        'A static photo or screen was detected instead of a live face.<br>' +
+        'Please look naturally at the camera.',
+        'err'
+      );
+      btn.disabled = false;
+      document.getElementById('login-lbl').textContent = '📷 Try again with your real face';
+      return;
+    }
+
+  scItem('lsc1','active','Detecting your face…');
+  document.getElementById('login-lbl').textContent = '🔍 Detecting face…';
+
+  // Step 1: Detect real face from live video
+  detectFaceFromVideo(loginV).then(function(detection) {
+    if (!detection.ok) {
+      scItem('lsc1','error','No face detected');
+      showMsg(msg,
+        '❌ <strong>No Face Detected!</strong><br><br>' + detection.reason + '<br><br>' +
+        'Please look directly at the camera and try again.',
+        'err'
+      );
+      btn.disabled = false;
+      document.getElementById('login-lbl').textContent = '📷 Try again — centre your face';
+      return;
+    }
+
+    document.getElementById('login-lbl').textContent = '🔍 Searching database…';
+
+    // Step 2: Find matching voter by face descriptor
+    findVoterByFace(detection.descriptor).then(function(matchResult) {
+      if (!matchResult) {
+        scItem('lsc1','error','Face not found in voter database');
+        stopCamera(loginV);
+        showMsg(msg,'❌ <strong>Face Not Recognized</strong><br><br>Your face is not found in the system.<br>Please go back and register first (New Voter).','err');
+        btn.disabled = false; return;
+      }
+
+      var voter = matchResult.voter;
+      var conf  = matchResult.score;
+      scItem('lsc1','done','Face found — matched to ' + voter.voter_id + ' (' + conf + '% confidence) ✅');
+
+      document.getElementById('match-preview').style.display = 'flex';
+      document.getElementById('match-thumb').src = voter.face_thumb || '';
+      document.getElementById('match-name').textContent = voter.name;
+      document.getElementById('match-conf').textContent = conf + '% face match';
+
+      scItem('lsc2','active','Verifying voter eligibility…');
+      if (voter.has_voted) {
+        scItem('lsc2','error','Already voted — permanently blocked');
+        stopCamera(loginV);
+        showMsg(msg,'❌ <strong>' + voter.name + ' has already voted.</strong><br>One face = one vote. Permanently blocked.','err');
+        btn.disabled = false; return;
+      }
+      if ((db.queue||[]).find(function(q) { return q.voter_id===voter.voter_id; })) {
+        scItem('lsc2','error','Already in queue');
+        stopCamera(loginV);
+        showMsg(msg,'❌ ' + voter.name + ' is already in the voting queue.','err');
+        btn.disabled = false; return;
+      }
+
+      scItem('lsc2','done', voter.name + ' is eligible to vote ✅');
+      scItem('lsc3','active','Joining voting queue…');
+      stopCamera(loginV);
+      currentVid = voter.voter_id;
+      db.queue = db.queue || [];
+      db.queue.push({ voter_id:currentVid, name:voter.name, joined_at:Date.now() });
+      DB.save(db);
+      scItem('lsc3','done','Added to queue ✅');
+
+      document.getElementById('q-pos').textContent  = db.queue.length;
+      document.getElementById('q-name').textContent = voter.name + ' ✅ Face verified (' + conf + '%)';
+      document.getElementById('q-vid').textContent  = currentVid;
+      document.getElementById('q-msg').textContent  = '';
+      goTo('s-queue');
+    });
+  }); // detectFaceFromVideo
+  }); // checkLiveness
+}
+
+// ── QUEUE ──────────────────────────────────────────────────────────────────────
+function checkTurn() {
+  var msg = document.getElementById('q-msg');
+  var db  = DB.get();
+  if (!db.election.is_active) { showMsg(msg,'The election has ended.','err'); return; }
+  if (!currentVid)             { showMsg(msg,'Session lost. Please scan your face again.','err'); goTo('s-home'); return; }
+  var voter = db.voters[currentVid];
+  if (voter && voter.has_voted) { showMsg(msg,'❌ You have already voted!','err'); return; }
+  var queue = db.queue || [];
+  var pos   = queue.findIndex(function(q) { return q.voter_id===currentVid; });
+  if (pos === -1) { showMsg(msg,'Not in queue. Please login again.','err'); return; }
+  document.getElementById('q-pos').textContent = pos + 1;
+  if (pos === 0) {
+    db.queue.shift(); DB.save(db);
+    msg.textContent = '';
+    buildBallot(db);
+  } else {
+    showMsg(msg, pos + ' voter(s) ahead of you. Please wait.','info');
+  }
+}
+
+function buildBallot(db) {
+  var voter = db.voters[currentVid];
+  document.getElementById('b-etitle').textContent = '🗳️ ' + (db.election.title||'General Election');
+  document.getElementById('b-vinfo').textContent  = 'Voting as: ' + (voter?voter.name:'') + ' (' + currentVid + ') · Face Verified ✅';
+  selectedIdx = null;
+  document.getElementById('b-msg').textContent = '';
+  var cands = Object.values(db.candidates);
+  var el    = document.getElementById('b-opts');
+  if (!cands.length) { el.innerHTML = '<p style="color:#94a3b8">No candidates available.</p>'; goTo('s-ballot'); return; }
+  el.innerHTML = cands.map(function(c,i) {
+    return '<div class="b-opt" id="bo'+i+'" onclick="pickCand('+i+')">'
+      + '<div class="c-av" style="background:'+AV_BG[i%AV_BG.length]+';color:'+AV_TXT[i%AV_TXT.length]+'">'+c.name[0]+'</div>'
+      + '<div><div class="c-nm">'+c.name+'</div><div class="c-pt">'+c.party+'</div></div>'
+      + '<div class="radio" id="rr'+i+'"></div></div>';
+  }).join('');
+  goTo('s-ballot');
+}
+
+function pickCand(idx) {
+  document.querySelectorAll('.b-opt').forEach(function(e) { e.classList.remove('sel'); });
+  document.getElementById('bo'+idx).classList.add('sel');
+  selectedIdx = idx;
+}
+
+function submitVote() {
+  var msg = document.getElementById('b-msg');
+  if (selectedIdx === null) { showMsg(msg,'Please select a candidate.','err'); return; }
+  var db    = DB.get();
+  var voter = db.voters[currentVid];
+  if (!voter||voter.has_voted) { showMsg(msg,'Already voted or session expired.','err'); return; }
+  var cands = Object.values(db.candidates);
+  var cand  = cands[selectedIdx];
+  db.candidates[cand.id].votes++;
+  db.voters[currentVid].has_voted = true;
+  db.votes_log.push({ voter_id:currentVid, candidate_id:cand.id, at:Date.now() });
+  DB.save(db);
+  document.getElementById('done-msg').textContent  = 'Thank you, ' + voter.name + '! Your vote has been securely recorded.';
+  document.getElementById('done-cand').textContent = '✅ You voted for: ' + cand.name + ' (' + cand.party + ')';
+  currentVid = null; selectedIdx = null;
+  goTo('s-done');
+}
+
+window.addEventListener('load', function() {
+  var db = DB.get();
+  if (!db.election.is_active) {
+    var p = document.getElementById('home-p');
+    if (p) p.innerHTML = '⏳ <strong>Election not started yet.</strong> You can still register — voting opens once the admin starts the election.';
+  }
+});
+
+</script>
+</body>
+</html>
